@@ -24,8 +24,6 @@ fabric.properties
 **/build/
 !src/**/build/
 gradle-app.setting
-!gradle-wrapper.jar
-!gradle-wrapper.properties
 .gradletasknamecache
 .project
 .classpath
@@ -60,3 +58,5 @@ hs_err_pid*
 replay_pid*
 bin/
 .ace-tool/
+!gradle-wrapper.jar
+!gradle-wrapper.properties
