@@ -1,0 +1,80 @@
+plugins {
+    `kotlin-dsl`
+    `maven-publish`
+    id("pmd")
+}
+
+group = "io.phunguy65.build-logic.plugins"
+version = "1.0.0"
+
+dependencies {
+    implementation(libs.kotlin.gradle.plugin)
+    implementation(libs.spring.boot.gradle.plugin)
+    implementation(libs.spring.dependency.management.gradle.plugin)
+    implementation(libs.hilt.gradle.plugin)
+    implementation(libs.pmd)
+    implementation(plugin(libs.plugins.jetbrains.compose))
+    implementation(plugin(libs.plugins.kotlinx.serialization))
+    implementation(plugin(libs.plugins.kotlin.multiplatform))
+    implementation(plugin(libs.plugins.android.kotlin.multiplatform.library))
+    implementation(plugin(libs.plugins.compose.compiler))
+    implementation(plugin(libs.plugins.ksp))
+    implementation(plugin(libs.plugins.android.application))
+    implementation(plugin(libs.plugins.android.library))
+    implementation(plugin(libs.plugins.spring.aot))
+    implementation(plugin(libs.plugins.graalvm.native))
+    implementation(plugin(libs.plugins.ktlint))
+    implementation(plugin(libs.plugins.detekt))
+    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+    }
+}
+gradlePlugin {
+    plugins {
+        register("jvmBase") {
+            id = "io.phunguy65.jvm-base"
+            implementationClass = "io.phunguy65.JvmBasePlugin"
+        }
+        register("androidApplication") {
+            id = "io.phunguy65.android.application"
+            implementationClass = "io.phunguy65.AndroidApplicationPlugin"
+        }
+        register("androidLibrary") {
+            id = "io.phunguy65.android.library"
+            implementationClass = "io.phunguy65.AndroidLibraryPlugin"
+        }
+        register("kmp") {
+            id = "io.phunguy65.kmp"
+            implementationClass = "io.phunguy65.KmpPlugin"
+        }
+        register("springBackend") {
+            id = "io.phunguy65.spring.backend"
+            implementationClass = "io.phunguy65.SpringBackendPlugin"
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/${System.getenv("GITHUB_REPOSITORY") ?: "OWNER/REPO"}")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+}
+fun DependencyHandlerScope.plugin(plugin: Provider<PluginDependency>) = 
+    plugin.map { "${it.pluginId}:${it.pluginId}.gradle.plugin:${it.version}" }

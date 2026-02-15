@@ -1,0 +1,87 @@
+name: Semantic Release
+
+on:
+  push:
+    branches: [ 'main' ]
+
+jobs:
+  release:
+    name: Semantic Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: termurin
+          java-version: 25
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Get Next Version
+        id: version
+        run: |
+          CURRENT_VERSION=$(grep "^version = " build.gradle.kts | cut -d'"' -f2)
+          echo "current=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          
+          # Simple semantic versioning based on commit messages
+          if git log --format=%B -n 1 | grep -q "BREAKING CHANGE\|!:"; then
+            echo "bump=major" >> $GITHUB_OUTPUT
+          elif git log --format=%B -n 1 | grep -q "^feat"; then
+            echo "bump=minor" >> $GITHUB_OUTPUT
+          else
+            echo "bump=patch" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update Version
+        run: |
+          CURRENT="${{ steps.version.outputs.current }}"
+          BUMP="${{ steps.version.outputs.bump }}"
+          
+          IFS='.' read -r major minor patch <<< "$CURRENT"
+          
+          case $BUMP in
+            major) NEW_VERSION="$((major + 1)).0.0" ;;
+            minor) NEW_VERSION="$major.$((minor + 1)).0" ;;
+            patch) NEW_VERSION="$major.$minor.$((patch + 1))" ;;
+          esac
+          
+          sed -i "s/version = \"$CURRENT\"/version = \"$NEW_VERSION\"/" build.gradle.kts
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+      - name: Update Changelog
+        run: ./gradlew patchChangelog
+
+      - name: Commit Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add build.gradle.kts CHANGELOG.md
+          git commit -m "chore: release v$NEW_VERSION [skip ci]" || echo "No changes to commit"
+          git push
+
+      - name: Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CHANGELOG=$(./gradlew getChangelog --unreleased --no-header --console=plain -q)
+          gh release create "v$NEW_VERSION" \
+            --title "v$NEW_VERSION" \
+            --notes "$CHANGELOG"
+
+      - name: Publish Packages
+        run: |
+          ./gradlew :conventions:publish
+          ./gradlew :version-catalog:publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
