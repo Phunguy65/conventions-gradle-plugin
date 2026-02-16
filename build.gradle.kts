@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "io.phunguy65.build-logic"
-version = "1.0.3"
+version = "1.0.4"
 
 pmd{
     toolVersion = libs.versions.pmd.get()
