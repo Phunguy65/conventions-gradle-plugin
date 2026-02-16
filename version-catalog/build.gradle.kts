@@ -1,6 +1,5 @@
 plugins {
     `version-catalog`
-    `maven-publish`
     id("com.vanniktech.maven.publish") version "0.36.0"
 }
 
@@ -12,14 +11,6 @@ catalog {
 
 group = "io.github.phunguy65.build-logic"
 version = "1.0.0"
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["versionCatalog"])
-        }
-    }
-}
 
 mavenPublishing {
     publishToMavenCentral()
