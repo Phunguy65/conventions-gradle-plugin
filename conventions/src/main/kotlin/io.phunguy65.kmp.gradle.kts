@@ -1,5 +1,4 @@
 import com.android.build.api.dsl.LibraryExtension
-import gradle.kotlin.dsl.accessors._684529432a1985cfc62e0e2d9b4aea5d.detekt
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
