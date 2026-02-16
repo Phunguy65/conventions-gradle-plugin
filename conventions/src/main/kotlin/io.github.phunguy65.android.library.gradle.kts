@@ -2,7 +2,7 @@ import com.android.build.api.dsl.LibraryExtension
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.kotlin.dsl.dependencies
 plugins { 
-    id("io.phunguy65.jvm-base")
+    id("io.github.phunguy65.jvm-base")
     id("com.android.library")
     id("com.google.dagger.hilt.android")
 }

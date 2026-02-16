@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.compose.ComposeExtension
 import org.gradle.accessors.dm.LibrariesForLibs
 plugins {
-    id ("io.phunguy65.jvm-base")
+    id ("io.github.phunguy65.jvm-base")
     id("org.jetbrains.compose")
     id("org.jetbrains.kotlin.multiplatform")
     id("com.android.kotlin.multiplatform.library")

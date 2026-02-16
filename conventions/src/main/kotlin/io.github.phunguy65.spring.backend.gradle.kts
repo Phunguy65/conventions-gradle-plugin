@@ -2,7 +2,7 @@ import org.gradle.accessors.dm.LibrariesForLibs
 import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins { 
-    id("io.phunguy65.jvm-base")
+    id("io.github.phunguy65.jvm-base")
     id("io.spring.dependency-management")
     id("org.springframework.boot")
     id("org.springframework.boot.aot")

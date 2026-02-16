@@ -3,7 +3,7 @@ import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.kotlin.dsl.configure
 
 plugins {
-    id("io.phunguy65.jvm-base")
+    id("io.github.phunguy65.jvm-base")
     id("com.android.application")
 }
 
