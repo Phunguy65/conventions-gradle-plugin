@@ -7,6 +7,10 @@ plugins {
 group = "io.phunguy65.build-logic.plugins"
 version = "1.0.0"
 
+pmd {
+    toolVersion = libs.versions.pmd.get()
+}
+
 dependencies {
     implementation(libs.kotlin.gradle.plugin)
     implementation(libs.spring.boot.gradle.plugin)
@@ -37,30 +41,6 @@ java {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     compilerOptions {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
-    }
-}
-gradlePlugin {
-    plugins {
-        register("jvmBase") {
-            id = "io.phunguy65.jvm-base"
-            implementationClass = "io.phunguy65.JvmBasePlugin"
-        }
-        register("androidApplication") {
-            id = "io.phunguy65.android.application"
-            implementationClass = "io.phunguy65.AndroidApplicationPlugin"
-        }
-        register("androidLibrary") {
-            id = "io.phunguy65.android.library"
-            implementationClass = "io.phunguy65.AndroidLibraryPlugin"
-        }
-        register("kmp") {
-            id = "io.phunguy65.kmp"
-            implementationClass = "io.phunguy65.KmpPlugin"
-        }
-        register("springBackend") {
-            id = "io.phunguy65.spring.backend"
-            implementationClass = "io.phunguy65.SpringBackendPlugin"
-        }
     }
 }
 

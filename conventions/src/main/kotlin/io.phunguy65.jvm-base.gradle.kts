@@ -8,6 +8,10 @@ plugins {
 val libs = the<LibrariesForLibs>()
 val javaVersion = JavaVersion.toVersion(libs.versions.java.get())
 
+pmd {
+	toolVersion = libs.versions.pmd.get()
+}
+
 java {
 	toolchain {
 		languageVersion.set(JavaLanguageVersion.of(javaVersion.majorVersion))
