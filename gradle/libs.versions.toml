@@ -23,6 +23,7 @@ graalvm = "0.11.4"
 detekt = "2.0.0-alpha.2"
 changelog = "2.5.0"
 vanniktechPublishing = "0.36.0"
+postgresql = "42.7.3"
 # For AndroidX xml
 appcompat = "1.7.1"
 material = "1.13.0"
@@ -89,6 +90,7 @@ spring-boot-starter-logging = { group = "org.springframework.boot", name = "spri
 spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "springBoot" }
 spring-boot-starter-aop = { group = "org.springframework.boot", name = "spring-boot-starter-aop", version.ref = "springBoot" }
 spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools", version.ref = "springBoot" }
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
 
 # Pmd
 pmd = { module = "net.sourceforge.pmd:pmd", version.ref = "pmd" }

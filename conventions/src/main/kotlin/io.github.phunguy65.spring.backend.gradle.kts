@@ -27,6 +27,7 @@ dependencies {
     "implementation"(libs.spring.boot.starter.logging)
     "implementation"(libs.spring.boot.starter.aop)
     "developmentOnly"(libs.spring.boot.devtools)
+    "runtimeOnly"(libs.postgresql)
     "testImplementation"(libs.spring.boot.starter.test) {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
