@@ -1,4 +1,4 @@
-name: Publish Build Logic
+name: Release Build Logic
 
 on:
   push:
@@ -9,7 +9,10 @@ on:
       - 'gradle/libs.versions.toml'
 
 jobs:
-  publish:
+  release:
+    environment:
+      name: release
+      url: ${{ steps.publish.outputs.repository_url }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -31,15 +34,11 @@ jobs:
           cache-read-only: false
           gradle-home-cache-cleanup: true
 
-      - name: Publish Convention Plugins
-        run: ./gradlew :conventions:publish
+      - name: Publish to Maven Central
+        run: ./gradlew :conventions:publishToMavenCentral :version-catalog:publishToMavenCentral --no-configuration-cache
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-      - name: Publish Version Catalog
-        run: ./gradlew :version-catalog:publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_KEY_CONTENTS }}

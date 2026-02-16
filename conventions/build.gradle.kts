@@ -1,10 +1,10 @@
 plugins {
     `kotlin-dsl`
-    `maven-publish`
     id("pmd")
+    alias(libs.plugins.vanniktech.publishing)
 }
 
-group = "io.phunguy65.build-logic.plugins"
+group = "io.github.phunguy65.build-logic.plugins"
 version = "1.0.0"
 
 pmd {
@@ -44,15 +44,36 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     }
 }
 
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/${System.getenv("GITHUB_REPOSITORY") ?: "OWNER/REPO"}")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
+    
+    coordinates("io.github.phunguy65", "build-logic-conventions", version.toString())
+    
+    pom {
+        name.set("Build Logic Conventions")
+        description.set("Gradle convention plugins for project configuration")
+        url.set("https://github.com/Phunguy65/conventions-gradle-plugin")
+        
+        licenses {
+            license {
+                name.set("The Apache License, Version 2.0")
+                url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
             }
+        }
+        
+        developers {
+            developer {
+                id.set("phunguy65")
+                name.set("Phu Nguyen")
+                url.set("https://github.com/Phunguy65")
+            }
+        }
+        
+        scm {
+            url.set("https://github.com/Phunguy65/conventions-gradle-plugin")
+            connection.set("scm:git:git://github.com/Phunguy65/conventions-gradle-plugin.git")
+            developerConnection.set("scm:git:ssh://git@github.com/Phunguy65/conventions-gradle-plugin.git")
         }
     }
 }
