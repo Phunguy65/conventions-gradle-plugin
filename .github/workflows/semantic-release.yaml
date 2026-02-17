@@ -1,12 +1,21 @@
-name: Semantic Release
+name: Release Build Logic
 
 on:
-  push:
-    branches: [ 'main' ]
+  workflow_dispatch:
+    inputs:
+      increment:
+        description: 'Version increment type'
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: patch
 
 jobs:
   release:
-    name: Semantic Release
+    name: Release Build Logic
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -16,7 +25,6 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
@@ -26,56 +34,33 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
 
-      - name: Get Next Version
-        id: version
+      - name: Configure Git
         run: |
-          CURRENT_VERSION=$(grep "^version = " build.gradle.kts | cut -d'"' -f2)
-          echo "current=$CURRENT_VERSION" >> $GITHUB_OUTPUT
-          
-          # Simple semantic versioning based on commit messages
-          if git log --format=%B -n 1 | grep -q "BREAKING CHANGE\|!:"; then
-            echo "bump=major" >> $GITHUB_OUTPUT
-          elif git log --format=%B -n 1 | grep -q "^feat"; then
-            echo "bump=minor" >> $GITHUB_OUTPUT
-          else
-            echo "bump=patch" >> $GITHUB_OUTPUT
-          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Update Version
+      - name: Create Release
         run: |
-          CURRENT="${{ steps.version.outputs.current }}"
-          BUMP="${{ steps.version.outputs.bump }}"
+          # Get current version before release
+          CURRENT_VERSION=$(./gradlew currentVersion -q --console=plain)
+          echo "Current version: $CURRENT_VERSION"
           
-          IFS='.' read -r major minor patch <<< "$CURRENT"
+          # Create release (this creates the git tag automatically)
+          ./gradlew release -Prelease.version${{ github.event.inputs.increment }} -Prelease.pushTagsOnly
           
-          case $BUMP in
-            major) NEW_VERSION="$((major + 1)).0.0" ;;
-            minor) NEW_VERSION="$major.$((minor + 1)).0" ;;
-            patch) NEW_VERSION="$major.$minor.$((patch + 1))" ;;
-          esac
-          
-          sed -i "s/version = \"$CURRENT\"/version = \"$NEW_VERSION\"/" build.gradle.kts
+          # Get new version after release
+          NEW_VERSION=$(./gradlew currentVersion -q --console=plain)
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          echo "New version: $NEW_VERSION"
 
       - name: Update Changelog
         run: ./gradlew patchChangelog
 
-      - name: Commit Changes
+      - name: Commit Changelog
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add build.gradle.kts CHANGELOG.md
-          git commit -m "chore: release v$NEW_VERSION [skip ci]" || echo "No changes to commit"
+          git add CHANGELOG.md
+          git commit -m "docs: update changelog for $NEW_VERSION [skip ci]" || echo "No changelog changes"
           git push
-
-      - name: Create Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          CHANGELOG=$(./gradlew getChangelog --unreleased --no-header --console=plain -q)
-          gh release create "v$NEW_VERSION" \
-            --title "v$NEW_VERSION" \
-            --notes "$CHANGELOG"
 
       - name: Publish Packages
         run: |
@@ -86,3 +71,12 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_KEY_CONTENTS }}
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CHANGELOG=$(./gradlew getChangelog --unreleased --no-header --console=plain -q)
+          gh release create "build-logic-$NEW_VERSION" \
+            --title "Build Logic $NEW_VERSION" \
+            --notes "$CHANGELOG"
