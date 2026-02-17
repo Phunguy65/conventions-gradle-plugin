@@ -4,12 +4,24 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
     id("pmd")
+    alias(libs.plugins.axion.release)
+}
+
+scmVersion {
+    tag {
+        prefix.set("build-logic")
+        versionSeparator.set("-")
+    }
 }
 
 group = "io.phunguy65.build-logic"
-version = "1.0.5"
+version = scmVersion.version
 
-pmd{
+subprojects {
+    version = rootProject.version
+}
+
+pmd {
     toolVersion = libs.versions.pmd.get()
 }
 
@@ -17,6 +29,6 @@ dependencies {
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
 
-changelog{
+changelog {
     repositoryUrl = "https://github.com/phunguy65/convention-gradle-plugin"
 }

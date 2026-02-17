@@ -2,10 +2,21 @@ plugins {
     `kotlin-dsl`
     id("pmd")
     alias(libs.plugins.vanniktech.publishing)
+    alias(libs.plugins.axion.release)
+}
+
+scmVersion {
+    repository {
+        directory.set(project.rootDir.parentFile.absolutePath)
+    }
+    tag {
+        prefix.set("build-logic")
+        versionSeparator.set("-")
+    }
 }
 
 group = "io.github.phunguy65.build-logic.plugins"
-version = "1.0.0"
+version = scmVersion.version
 
 pmd {
     toolVersion = libs.versions.pmd.get()
@@ -48,7 +59,7 @@ mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
     
-    coordinates("io.github.phunguy65", "build-logic-conventions", version.toString())
+    coordinates("io.github.phunguy65", project.name, version.toString())
     
     pom {
         name.set("Build Logic Conventions")
@@ -58,14 +69,14 @@ mavenPublishing {
         licenses {
             license {
                 name.set("The Apache License, Version 2.0")
-                url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
             }
         }
         
         developers {
             developer {
                 id.set("phunguy65")
-                name.set("Phu Nguyen")
+                name.set("Nguyễn Ngọc Phú")
                 url.set("https://github.com/Phunguy65")
             }
         }

@@ -24,7 +24,7 @@ detekt = "2.0.0-alpha.2"
 changelog = "2.5.0"
 vanniktechPublishing = "0.36.0"
 postgresql = "42.7.3"
-# For AndroidX xml
+axionRelease = "1.18.14"
 appcompat = "1.7.1"
 material = "1.13.0"
 androidxAnnotation = "1.9.1"
@@ -36,7 +36,6 @@ androixDatabinding = "9.0.0"
 hilt = "2.59.1"
 
 [libraries]
-# Android
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
 androidx-activity = { module = "androidx.activity:activity", version.ref = "androidxActivity" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -53,18 +52,15 @@ androidx-lifecycle-compiler = { module = "androidx.lifecycle:lifecycle-compiler"
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 
-# Coroutines
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 
-# Ktor (Networking)
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
-# Koin (Dependency Injection)
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android" }
 koin-compose = { module = "io.insert-koin:koin-compose" }
@@ -75,11 +71,9 @@ koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler" , version.ref 
 koin-ktor = { module = "io.insert-koin:koin-ktor" }
 koin-test = { module = "io.insert-koin:koin-test" }
 
-# Coil (Image Loading)
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor", version.ref = "coil" }
 
-# Spring
 spring-boot-starter-web = { group = "org.springframework.boot", name = "spring-boot-starter-web", version.ref = "springBoot" }
 spring-boot-starter-data-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa", version.ref = "springBoot" }
 spring-boot-starter-security = { group = "org.springframework.boot", name = "spring-boot-starter-security", version.ref = "springBoot" }
@@ -92,16 +86,13 @@ spring-boot-starter-aop = { group = "org.springframework.boot", name = "spring-b
 spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools", version.ref = "springBoot" }
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
 
-# Pmd
 pmd = { module = "net.sourceforge.pmd:pmd", version.ref = "pmd" }
 
-# Retrofit and OkHttp
 retrofit2 = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit2" }
 retrofit2-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit2" }
 okhttp3 = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp3" }
 okhttp3-loggingInterceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp3" }
 
-# Gradle Plugins
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 spring-boot-gradle-plugin = { group = "org.springframework.boot", name = "spring-boot-gradle-plugin", version.ref = "springBoot" }
 spring-dependency-management-gradle-plugin = { group = "io.spring.gradle", name = "dependency-management-plugin", version.ref = "springDependencyManagement" }
@@ -124,5 +115,4 @@ ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 detekt = { id = "dev.detekt", version.ref = "detekt" }
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
 vanniktech-publishing = { id = "com.vanniktech.maven.publish", version.ref = "vanniktechPublishing" }
-# Plugin build-logic self-reference
-#my-kmp-application = { id = "my.kmp.application", version = "unspecified" }
+axion-release = { id = "pl.allegro.tech.build.axion-release", version.ref = "axionRelease" }

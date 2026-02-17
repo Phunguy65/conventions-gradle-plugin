@@ -8,4 +8,3 @@ dependencyResolutionManagement {
 }
 include(":version-catalog")
 rootProject.name = "build-logic"
-

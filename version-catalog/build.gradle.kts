@@ -10,13 +10,12 @@ catalog {
 }
 
 group = "io.github.phunguy65.build-logic"
-version = "1.0.0"
 
 mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
     
-    coordinates("io.github.phunguy65", "build-logic-catalog", version.toString())
+    coordinates("io.github.phunguy65", project.name, version.toString())
     
     pom {
         name.set("Build Logic Version Catalog")
@@ -26,14 +25,14 @@ mavenPublishing {
         licenses {
             license {
                 name.set("The Apache License, Version 2.0")
-                url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
             }
         }
         
         developers {
             developer {
                 id.set("phunguy65")
-                name.set("Phu Nguyen")
+                name.set("Nguyễn Ngọc Phú")
                 url.set("https://github.com/Phunguy65")
             }
         }
