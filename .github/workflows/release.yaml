@@ -7,6 +7,17 @@ on:
     paths:
       - 'conventions/**'
       - 'gradle/libs.versions.toml'
+  workflow_dispatch:
+    inputs:
+      increment:
+        description: 'Version increment type'
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: patch
 
 jobs:
   release:
