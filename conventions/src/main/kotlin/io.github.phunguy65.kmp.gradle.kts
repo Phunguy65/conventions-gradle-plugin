@@ -16,6 +16,8 @@ plugins {
     id("dev.detekt")
 }
 
+version = "1.0.1"
+
 val libs = the<LibrariesForLibs>()
 val javaVersion = JavaVersion.toVersion(libs.versions.java.get())
 val kotlinVersion = libs.versions.kotlin.get()
@@ -52,6 +54,7 @@ configure<KotlinMultiplatformExtension> {
                 implementation(project.dependencies.platform(libs.koin.bom))
                 implementation(libs.koin.compose)
                 implementation(libs.koin.compose.viewmodel)
+                implementation(libs.koin.compose.viewmodel.navigation)
                 implementation(libs.koin.annotations)
             }
         }
